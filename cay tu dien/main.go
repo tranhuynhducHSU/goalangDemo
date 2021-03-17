@@ -12,51 +12,97 @@ type Node struct {
 	right     int
 }
 
-func addNode(elem string, nodes []Node) []Node {
-	//st:=0
-	firstChar := strings.ToUpper(string(elem[0]))
-	node := Node{"", make([]string, 0), 0, 0}
-	index := 0
-	if len(nodes) == 0 {
-		node.firstChar = firstChar
-		node.arr = append(node.arr, elem)
-		nodes = append(nodes, node)
-	} else {
-		if firstChar == nodes[index].firstChar {
-			nodes[index].arr = append(nodes[index].arr, elem)
-		} else if firstChar > nodes[index].firstChar {
-			if nodes[index].right == 0 {
-				nodes[index].right = index
-				nodes[index].arr = append(nodes[index].arr, elem)
-			}
+func addElement(nodeNew Node, indexParen int, nodes []Node) []Node {
+	if nodeNew.firstChar == nodes[indexParen].firstChar {
+		nodes[indexParen].arr = append(nodes[indexParen].arr, nodeNew.arr[0])
+	} else if nodeNew.firstChar > nodes[indexParen].firstChar {
+		if nodes[indexParen].right == 0 {
+			nodes[indexParen].right = len(nodes)
+			nodes = append(nodes, nodeNew)
+		} else {
+			nodes = addElement(nodeNew, nodes[indexParen].right, nodes)
+		}
 
-		} else if firstChar < nodes[index].firstChar {
-			if nodes[index].left == 0 {
-				nodes[index].left = index
-				nodes[index].arr = append(nodes[index].arr, elem)
-			}
-
+	} else if nodeNew.firstChar < nodes[indexParen].firstChar {
+		if nodes[indexParen].left == 0 {
+			nodes[indexParen].left = len(nodes)
+			nodes = append(nodes, nodeNew)
+		} else {
+			nodes = addElement(nodeNew, nodes[indexParen].left, nodes)
 		}
 	}
-
 	return nodes
 }
 
-func findNodeNil(node Node, nodes []Node) (viTri int) {
-	for {
-		if 
+func printTree(nodes []Node) {
+	arr := make([][]int, 0)
+	arrTemp := make([]int, 0)
 
-		if true {
+	arrTemp = append(arrTemp, 0)
+	arr = append(arr, arrTemp)
+
+	for j := 0; j < len(nodes)/2; j++ {
+		arrStr := make([]int, 0)
+		end := true
+		for i := 0; i < len(arr[j]); i++ {
+			if arr[j][i] == -1 || nodes[arr[j][i]].left == 0 {
+				arrStr = append(arrStr, -1)
+			} else {
+				arrStr = append(arrStr, nodes[arr[j][i]].left)
+				end = false
+			}
+			if arr[j][i] == -1 || nodes[arr[j][i]].right == 0 {
+				arrStr = append(arrStr, -1)
+			} else {
+				arrStr = append(arrStr, nodes[arr[j][i]].right)
+				end = false
+			}
+		}
+		if end == true {
 			break
 		}
+		arr = append(arr, arrStr)
+		
 	}
-	return
+	// for i:=len(arr);i>= len(arr);i-- {
+	for i:=0;i< len(arr);i++{
+
+		res:=""
+		xx := i
+		xy := i*2-1
+		for j:=0;j<len(arr[i]);i++{
+			res+=
+		}
+		fmt.Println()
+	}
 }
 
 func main() {
-	dictionary := make([]Node, 0)
-	dictionary = addNode("duc", dictionary)
-	dictionary = addNode("dung", dictionary)
+	// str := ""
+	// fmt.Print("Nhập mảng các từ [',']: ")
+	// fmt.Scan(&str)
+	// str := "h,d,q,t,sy,qm,aa,tq,da,af,hg,az,qq,zz,ah,wr,hd,ad"
+	str := "5,55,7,4,8,9,3,6,1,2,5,3,6,9,7,45,0,7,4"
 
-	fmt.Print(dictionary)
+	arr := strings.Split(str, ",")
+
+	//Phần tử đầu tiên
+	firstChar := strings.ToUpper(string(arr[0]))
+	nodes := make([]Node, 0)
+	nodes = append(nodes, Node{firstChar, make([]string, 0), 0, 0})
+	nodes[0].arr = append(nodes[0].arr, arr[0])
+
+	for i := 1; i < len(arr); i++ {
+		//khoi tao node add str vo arr
+		nodeTemp := Node{"", make([]string, 0), 0, 0}
+		nodeTemp.firstChar = strings.ToUpper(string(arr[i][0]))
+		nodeTemp.arr = append(nodeTemp.arr, arr[i])
+		nodes = addElement(nodeTemp, 0, nodes)
+	}
+
+	for i := 0; i < len(nodes); i++ {
+		fmt.Println(i, nodes[i])
+	}
+
+	printTree(nodes)
 }
